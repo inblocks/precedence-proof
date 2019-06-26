@@ -1,0 +1,11 @@
+{
+  "name": "@precedence/proof",
+  "private": true,
+  "bin": {
+    "precedence-proof": "./proof.js"
+  },
+  "dependencies": {
+    "ethereumjs-util": "^6.1.0",
+    "merkle-patricia-tree": "^3.0.0"
+  }
+}
