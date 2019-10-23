@@ -3,7 +3,7 @@
 const crypto = require('crypto')
 const fs = require('fs')
 
-const { fromRpcSig, publicToAddress, ecrecover, keccak256 } = require('ethereumjs-util')
+const { fromRpcSig, publicToAddress, ecrecover, hashPersonalMessage } = require('ethereumjs-util')
 const Trie = require('merkle-patricia-tree')
 
 const usage = () => {
@@ -26,7 +26,6 @@ const printResultAndExit = (result) => {
 const sha256 = value => {
   return crypto.createHash('sha256').update(value).digest('hex')
 }
-
 
 !(async () => {
   if (process.argv.some((arg) => arg === '-h' || arg === '--help')) {
@@ -78,7 +77,7 @@ const sha256 = value => {
   // verify that the provided hash is signed
   try {
     const vrs = fromRpcSig(input.signature)
-    if ('0x' + publicToAddress(ecrecover(keccak256(input.hash), vrs.v, vrs.r, vrs.s)).toString('hex') !== input.address) {
+    if ('0x' + publicToAddress(ecrecover(hashPersonalMessage(Buffer.from(input.hash, 'hex')), vrs.v, vrs.r, vrs.s)).toString('hex') !== input.address) {
       result.error = `The provided hash is not signed.`
       printResultAndExit(result)
     }
