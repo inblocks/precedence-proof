@@ -27,7 +27,7 @@ const sha256 = value => {
   return crypto.createHash('sha256').update(value).digest('hex')
 }
 
-!(async () => {
+(async () => {
   if (process.argv.some((arg) => arg === '-h' || arg === '--help')) {
     usage()
   }
@@ -60,7 +60,7 @@ const sha256 = value => {
     verified: false,
     value: undefined,
     message: undefined,
-    error: undefined,
+    error: undefined
   }
 
   // verify that the SHA-256 of the provided data is equal to the provided hash
@@ -78,7 +78,7 @@ const sha256 = value => {
   try {
     const vrs = fromRpcSig(input.signature)
     if ('0x' + publicToAddress(ecrecover(hashPersonalMessage(Buffer.from(input.hash, 'hex')), vrs.v, vrs.r, vrs.s)).toString('hex') !== input.address) {
-      result.error = `The provided hash is not signed.`
+      result.error = 'The provided hash is not signed.'
       printResultAndExit(result)
     }
   } catch (e) {
@@ -124,7 +124,8 @@ const sha256 = value => {
   }
 
   // verify that the extracted value from the proof is equal to the SHA-256 hash of the provided provable document
-  if (value !== sha256(JSON.stringify(input.provable))) {
+  const expectedValue = sha256(JSON.stringify(input.provable))
+  if (value !== expectedValue) {
     result.error = `The value extracted from the proof (${value}) is not equal to the SHA-256 hash of the provided provable document (${expectedValue})`
     printResultAndExit(result)
   }
@@ -132,4 +133,6 @@ const sha256 = value => {
   // verified!
   result.verified = true
   printResultAndExit(result)
-})()
+})().catch(e => {
+  console.error(e)
+})

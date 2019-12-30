@@ -5,7 +5,10 @@
     "precedence-proof": "./proof.js"
   },
   "dependencies": {
-    "ethereumjs-util": "^6.1.0",
+    "ethereumjs-util": "^6.2.0",
     "merkle-patricia-tree": "^3.0.0"
+  },
+  "devDependencies": {
+    "standard": "^14.3.1"
   }
 }
